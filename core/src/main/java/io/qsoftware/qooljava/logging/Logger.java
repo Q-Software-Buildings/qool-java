@@ -45,7 +45,7 @@ public final class Logger {
     NO
   }
 
-  private static Collection<LogAppender> appenders;
+  private static final Collection<LogAppender> appenders;
   private static SimpleDateFormat dateFormat;
   private static PrintStream printStream;
   private static DebugMode debugMode = DebugMode.DEACTIVATE;
