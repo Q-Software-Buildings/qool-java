@@ -1,3 +1,4 @@
+/*
 MIT License
 
 Copyright (c) 2020 Q-Software (Contact: Qetz#5363)
@@ -19,3 +20,53 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+*/
+
+package io.qsoftware.qooljava.logging;
+
+import org.junit.jupiter.api.*;
+
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public final class LoggerTest {
+  @Test
+  @BeforeAll
+  public static void testLoggerCreation() {
+    Logger.initialize();
+    Logger.enableDebugMode();
+    Logger.updateColorCodes(Logger.ColorCodes.ALL);
+    Logger.setDateFormat("dd.MM.yyyy hh:mm:ss");
+  }
+
+  private static final String TEST_MESSAGE = "Hey, my name is: %s";
+  private static final String NAME = "Qetz";
+
+  @Test
+  @Order(0)
+  public void testDebug() {
+    Logger.debug(TEST_MESSAGE, NAME);
+  }
+
+  @Test
+  @Order(1)
+  public void testInfo() {
+    Logger.info(TEST_MESSAGE, NAME);
+  }
+
+  @Test
+  @Order(2)
+  public void testWarning() {
+    Logger.warn(TEST_MESSAGE, NAME);
+  }
+
+  @Test
+  @Order(3)
+  public void testError() {
+    Logger.error(TEST_MESSAGE, NAME);
+  }
+
+  @Test
+  @Order(4)
+  public void testFatal() {
+    Logger.fatal(TEST_MESSAGE, NAME);
+  }
+}

@@ -22,44 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package io.qsoftware.qooljava.number;
+package io.qsoftware.qooljava.logging;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
-public final class NumberFormat {
-
-  public static boolean isByte(String string) {
-    try {
-      Byte.parseByte(string);
-      return true;
-    } catch (NumberFormatException noByte) {
-      return false;
-    }
-  }
-
-  public static boolean isInteger(String string) {
-    try {
-      Integer.parseInt(string);
-      return true;
-    } catch (NumberFormatException noInteger) {
-      return false;
-    }
-  }
-
-  public static boolean isDouble(String string) {
-    try {
-      Double.parseDouble(string);
-      return true;
-    } catch (NumberFormatException noDouble) {
-      return false;
-    }
-  }
-
-  public static boolean isLong(String string) {
-    try {
-      Long.parseLong(string);
-      return true;
-    } catch (NumberFormatException noLong) {
-      return false;
-    }
-  }
+public interface LogAppender {
+  void append(String message);
 }
