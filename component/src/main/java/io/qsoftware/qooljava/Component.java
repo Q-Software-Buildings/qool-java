@@ -22,39 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package io.qsoftware.qooljava.logging.file;
+package io.qsoftware.qooljava;
 
-import io.qsoftware.qooljava.Preconditions;
-import io.qsoftware.qooljava.io.Files;
-import io.qsoftware.qooljava.logging.LogAppender;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.io.File;
-import java.io.IOException;
-
-public final class FileLogAppender implements LogAppender {
-  public static FileLogAppender createWithFile(File file) {
-    Preconditions.checkNotNull(file);
-    secureFileExistence(file);
-    return new FileLogAppender(file);
-  }
-
-  private static void secureFileExistence(File file) {
-    try {
-      Files.createFileOrDirectory(file);
-    } catch (IOException fileNotCreatable) {
-      fileNotCreatable.printStackTrace();
-    }
-  }
-
-  private final File file;
-
-  private FileLogAppender(File file) {
-    this.file = file;
-  }
-
-  @Override
-  public void append(String message) {
-    var logMessage = String.format("%s\n", message);
-    Files.writeAndFlush(file, logMessage, Files.StartPoint.ENDING);
-  }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface Component {
 }

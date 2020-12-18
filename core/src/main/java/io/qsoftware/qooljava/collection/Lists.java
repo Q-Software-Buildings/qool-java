@@ -29,8 +29,16 @@ import java.util.ArrayList;
 public final class Lists {
   private Lists() {}
 
+  public static <E> ArrayList<E> newArrayList() {
+    return createArrayList();
+  }
+
   public static <E> ArrayList<E> createArrayList() {
     return new ArrayList<>();
+  }
+
+  public static <E> SearchArrayList<E> newSearchArrayList() {
+    return createSearchArrayList();
   }
 
   public static <E> SearchArrayList<E> createSearchArrayList() {

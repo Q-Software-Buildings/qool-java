@@ -27,12 +27,18 @@ package io.qsoftware.qooljava.map;
 import java.util.HashMap;
 
 public final class Maps {
-  private Maps() {
+  private Maps() {}
 
+  public static <K, V> HashMap<K, V> newHashMap() {
+    return new HashMap<>();
   }
 
   public static <K, V> HashMap<K, V> createHashMap() {
     return new HashMap<>();
+  }
+
+  public static <K, V> SearchHashMap<K, V> newSearchHashMap() {
+    return new SearchHashMap<>();
   }
 
   public static <K, V> SearchHashMap<K, V> createSearchHashMap() {

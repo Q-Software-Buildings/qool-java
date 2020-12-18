@@ -25,4 +25,5 @@ SOFTWARE.
 rootProject.name = 'qool-java'
 include 'core'
 include 'google'
+include 'component'
 

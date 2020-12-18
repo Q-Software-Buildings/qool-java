@@ -22,39 +22,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package io.qsoftware.qooljava.logging.file;
+package io.qsoftware.qooljava;
 
-import io.qsoftware.qooljava.Preconditions;
-import io.qsoftware.qooljava.io.Files;
-import io.qsoftware.qooljava.logging.LogAppender;
+import io.qsoftware.qooljava.collection.Lists;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
-public final class FileLogAppender implements LogAppender {
-  public static FileLogAppender createWithFile(File file) {
-    Preconditions.checkNotNull(file);
-    secureFileExistence(file);
-    return new FileLogAppender(file);
+public final class ComponentScanner {
+  public static ComponentScanner createOfScanner(ClassScanner classScanner) {
+    Preconditions.checkNotNull(classScanner);
+    return new ComponentScanner(classScanner, Lists.newArrayList());
   }
 
-  private static void secureFileExistence(File file) {
-    try {
-      Files.createFileOrDirectory(file);
-    } catch (IOException fileNotCreatable) {
-      fileNotCreatable.printStackTrace();
-    }
+  private final ClassScanner scanner;
+  private Collection<Class<?>> classes;
+
+  private ComponentScanner(
+    ClassScanner scanner,
+    Collection<Class<?>> classes
+  ) {
+    this.scanner = scanner;
+    this.classes = classes;
   }
 
-  private final File file;
-
-  private FileLogAppender(File file) {
-    this.file = file;
+  public void loadComponents() {
+    this.classes = this.scanner
+      .findAnnotated(Component.class)
+      .collect(Collectors.toList());
   }
 
-  @Override
-  public void append(String message) {
-    var logMessage = String.format("%s\n", message);
-    Files.writeAndFlush(file, logMessage, Files.StartPoint.ENDING);
+  public ClassScanner classes() {
+    return ClassScanner.of(this.classes);
   }
 }

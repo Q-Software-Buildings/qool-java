@@ -164,7 +164,7 @@ public final class AsyncPrintStream extends PrintStream {
       BlockingQueue<Runnable> executionQueue
     ) {
       Preconditions.checkNotNull(executionQueue);
-      PrintThread printThread = new PrintThread(executionQueue);
+      var printThread = new PrintThread(executionQueue);
       printThread.setupThreadSettings();
       return printThread;
     }

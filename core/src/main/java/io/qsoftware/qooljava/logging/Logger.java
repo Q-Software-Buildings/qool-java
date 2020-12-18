@@ -133,7 +133,7 @@ public final class Logger {
     message = String.format(message, options);
     message = appendLogLevel(message, level);
     message = tryAppendDate(message);
-    final String finalMessage = appendColorCode(message, level);
+    var finalMessage = appendColorCode(message, level);
 
     printStream.println(finalMessage);
     appenders.forEach(appender -> appender.append(finalMessage));

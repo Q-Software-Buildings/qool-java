@@ -22,39 +22,28 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package io.qsoftware.qooljava.logging.file;
+plugins {
+  id 'java'
+}
 
-import io.qsoftware.qooljava.Preconditions;
-import io.qsoftware.qooljava.io.Files;
-import io.qsoftware.qooljava.logging.LogAppender;
+group 'io.q-software'
+version '0.1.0'
 
-import java.io.File;
-import java.io.IOException;
+repositories {
+  mavenCentral()
+}
 
-public final class FileLogAppender implements LogAppender {
-  public static FileLogAppender createWithFile(File file) {
-    Preconditions.checkNotNull(file);
-    secureFileExistence(file);
-    return new FileLogAppender(file);
-  }
+dependencies {
+  implementation project(':core')
 
-  private static void secureFileExistence(File file) {
-    try {
-      Files.createFileOrDirectory(file);
-    } catch (IOException fileNotCreatable) {
-      fileNotCreatable.printStackTrace();
-    }
-  }
+  compile group: 'io.github.classgraph', name: 'classgraph', version: '4.6.3'
 
-  private final File file;
+  testImplementation group: 'org.junit.jupiter',
+    name: 'junit-jupiter-api',
+    version: '5.6.0'
+  testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine'
+}
 
-  private FileLogAppender(File file) {
-    this.file = file;
-  }
-
-  @Override
-  public void append(String message) {
-    var logMessage = String.format("%s\n", message);
-    Files.writeAndFlush(file, logMessage, Files.StartPoint.ENDING);
-  }
+test {
+  useJUnitPlatform()
 }
