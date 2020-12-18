@@ -22,7 +22,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-rootProject.name = 'qool-java'
-include 'core'
-include 'google'
+plugins {
+  id 'java'
+}
 
+group 'io.q-software'
+version '1.0.0'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation project(':core')
+  compile group: 'com.google.guava', name: 'guava', version: '30.1-jre'
+}
+
+test {
+  useJUnitPlatform()
+}
