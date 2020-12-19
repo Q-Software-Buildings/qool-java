@@ -22,9 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-rootProject.name = 'qool-java'
-include 'core'
-include 'google'
-include 'component'
-include 'hibernate'
+package io.qsoftware.qooljava.database;
 
+public interface Credentials {
+  String host();
+  int port();
+  String database();
+  String username();
+  String password();
+
+  String createJdbcConnectionUrl(String databaseType, String options);
+}

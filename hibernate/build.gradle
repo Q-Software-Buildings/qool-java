@@ -22,9 +22,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-rootProject.name = 'qool-java'
-include 'core'
-include 'google'
-include 'component'
-include 'hibernate'
+plugins {
+  id 'java'
+  id "com.github.johnrengelman.shadow" version "6.1.0"
+}
 
+group 'io.q-software'
+version '1.0.0'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation project(':core')
+  implementation project(':component')
+  implementation project(':google')
+
+  compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.26.Final'
+}
+
+test {
+  useJUnitPlatform()
+}

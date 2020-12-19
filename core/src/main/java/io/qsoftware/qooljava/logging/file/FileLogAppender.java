@@ -29,6 +29,7 @@ import io.qsoftware.qooljava.io.Files;
 import io.qsoftware.qooljava.logging.LogAppender;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public final class FileLogAppender implements LogAppender {
@@ -55,6 +56,12 @@ public final class FileLogAppender implements LogAppender {
   @Override
   public void append(String message) {
     var logMessage = String.format("%s\n", message);
-    Files.writeAndFlush(file, logMessage, Files.StartPoint.ENDING);
+    try {
+      Files.writeAndFlush(file, logMessage, Files.StartPoint.ENDING);
+    } catch (FileNotFoundException fileNotFoundFailure) {
+      System.err.printf("Could not append log to file for message: %s\n",
+        logMessage);
+      System.err.println(fileNotFoundFailure.getMessage());
+    }
   }
 }
