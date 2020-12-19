@@ -27,10 +27,17 @@ package io.qsoftware.qooljava.map;
 import io.qsoftware.qooljava.Preconditions;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 public final class SearchHashMap<K, V> extends HashMap<K, V> {
+  public SearchHashMap(Map<? extends K, ? extends V> map) {
+    super(map);
+  }
+
+  public SearchHashMap() {}
+
   public Optional<V> findByKey(K key) {
     Preconditions.checkNotNull(key);
     return Optional.ofNullable(get(key));

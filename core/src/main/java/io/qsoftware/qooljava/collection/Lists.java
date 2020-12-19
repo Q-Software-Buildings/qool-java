@@ -24,21 +24,44 @@ SOFTWARE.
 
 package io.qsoftware.qooljava.collection;
 
+import io.qsoftware.qooljava.Preconditions;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public final class Lists {
   private Lists() {}
 
+  public static <E> ArrayList<E> newArrayList(List<E> list) {
+    Preconditions.checkNotNull(list);
+    return new ArrayList<>(list);
+  }
+
   public static <E> ArrayList<E> newArrayList() {
     return createArrayList();
+  }
+
+  public static <E> ArrayList<E> createArrayList(List<E> list) {
+    Preconditions.checkNotNull(list);
+    return new ArrayList<>(list);
   }
 
   public static <E> ArrayList<E> createArrayList() {
     return new ArrayList<>();
   }
 
+  public static <E> SearchArrayList<E> newSearchArrayList(List<E> list) {
+    Preconditions.checkNotNull(list);
+    return new SearchArrayList<>(list);
+  }
+
   public static <E> SearchArrayList<E> newSearchArrayList() {
     return createSearchArrayList();
+  }
+
+  public static <E> SearchArrayList<E> createSearchArrayList(List<E> list) {
+    Preconditions.checkNotNull(list);
+    return new SearchArrayList<>(list);
   }
 
   public static <E> SearchArrayList<E> createSearchArrayList() {

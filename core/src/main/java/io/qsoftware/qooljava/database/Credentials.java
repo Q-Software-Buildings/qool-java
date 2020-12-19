@@ -30,6 +30,8 @@ public interface Credentials {
   String database();
   String username();
   String password();
+  String urlDatabase();
+  String urlOptions();
 
-  String createJdbcConnectionUrl(String databaseType, String options);
+  String createJdbcConnectionUrl();
 }

@@ -29,7 +29,6 @@ import com.google.gson.GsonBuilder;
 import io.qsoftware.qooljava.io.Files;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Objects;
@@ -40,18 +39,25 @@ public final class JsonCredentials implements Credentials {
   private final String database;
   private final String username;
   private final String password;
+  private final String urlDatabase;
+  private final String urlOptions;
 
   private JsonCredentials(
     String host,
     int port,
     String database,
     String username,
-    String password) {
+    String password,
+    String urlDatabase,
+    String urlOptions
+  ) {
     this.host = host;
     this.port = port;
     this.database = database;
     this.username = username;
     this.password = password;
+    this.urlDatabase = urlDatabase;
+    this.urlOptions = urlOptions;
   }
 
   @Override
@@ -79,19 +85,27 @@ public final class JsonCredentials implements Credentials {
     return password;
   }
 
-  private static final String JDBC_CONNECTION_URL_FORMAT
-    = "jdbc:%s://%s:%s/%s%s";
-  public static final String DEFAULT_OPTIONS
-    = "?connectTimeout=0&autoReconnect=true";
+  @Override
+  public String urlDatabase() {
+    return urlDatabase;
+  }
 
   @Override
-  public String createJdbcConnectionUrl(String databaseType, String options) {
+  public String urlOptions() {
+    return urlOptions;
+  }
+
+  private static final String JDBC_CONNECTION_URL_FORMAT
+    = "jdbc:%s://%s:%s/%s%s";
+
+  @Override
+  public String createJdbcConnectionUrl() {
     return String.format(JDBC_CONNECTION_URL_FORMAT,
-      databaseType,
+      urlDatabase,
       host,
       port,
       database,
-      options);
+      urlOptions);
   }
 
   private static final Gson JSON_SERIALIZER = new GsonBuilder()
@@ -122,11 +136,20 @@ public final class JsonCredentials implements Credentials {
       && credentials.port == port
       && credentials.database.equals(database)
       && credentials.username.equals(username)
-      && credentials.password.equals(password);
+      && credentials.password.equals(password)
+      && credentials.urlDatabase.equals(urlDatabase)
+      && credentials.urlOptions.equals(urlOptions);
   }
 
   public JsonCredentials clone() {
-    return new JsonCredentials(host, port, database, username, password);
+    return new JsonCredentials(
+      host,
+      port,
+      database,
+      username,
+      password,
+      urlDatabase,
+      urlOptions);
   }
 
   public void saveToFile(File file) throws IOException {
@@ -154,6 +177,8 @@ public final class JsonCredentials implements Credentials {
       credentials.port(),
       credentials.database(),
       credentials.username(),
-      credentials.password());
+      credentials.password(),
+      credentials.urlDatabase(),
+      credentials.urlOptions());
   }
 }

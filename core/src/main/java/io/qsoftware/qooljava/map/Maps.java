@@ -24,21 +24,52 @@ SOFTWARE.
 
 package io.qsoftware.qooljava.map;
 
+import io.qsoftware.qooljava.Preconditions;
+
 import java.util.HashMap;
+import java.util.Map;
 
 public final class Maps {
   private Maps() {}
 
+  public static <K, V> HashMap<K, V> newHashMap(
+    Map<? extends K, ? extends V> map
+  ) {
+    Preconditions.checkNotNull(map);
+    return new HashMap<>(map);
+  }
+
   public static <K, V> HashMap<K, V> newHashMap() {
     return new HashMap<>();
+  }
+
+  public static <K, V> HashMap<K, V> createHashMap(
+    Map<? extends K, ? extends V> map
+  ) {
+    Preconditions.checkNotNull(map);
+    return new HashMap<>(map);
   }
 
   public static <K, V> HashMap<K, V> createHashMap() {
     return new HashMap<>();
   }
 
+  public static <K, V> SearchHashMap<K, V> newSearchHashMap(
+    Map<? extends K, ? extends V> map
+  ) {
+    Preconditions.checkNotNull(map);
+    return new SearchHashMap<>(map);
+  }
+
   public static <K, V> SearchHashMap<K, V> newSearchHashMap() {
     return new SearchHashMap<>();
+  }
+
+  public static <K, V> SearchHashMap<K, V> createSearchHashMap(
+    Map<? extends K, ? extends V> map
+  ) {
+    Preconditions.checkNotNull(map);
+    return new SearchHashMap<>(map);
   }
 
   public static <K, V> SearchHashMap<K, V> createSearchHashMap() {

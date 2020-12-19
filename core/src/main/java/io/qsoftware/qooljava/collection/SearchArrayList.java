@@ -25,10 +25,17 @@ SOFTWARE.
 package io.qsoftware.qooljava.collection;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 public final class SearchArrayList<E> extends ArrayList<E> {
+  public SearchArrayList(Collection<? extends E> collection) {
+    super(collection);
+  }
+
+  public SearchArrayList() {}
+
   public Optional<E> findByCondition(Predicate<E> condition) {
     for (E entry : this) {
       if (condition.test(entry)) {
