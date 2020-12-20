@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Q-Software (Contact: Qetz#5363)
+Copyright (c) 2020 Q-Software (Contact: qSoftware#5363)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,13 @@ SOFTWARE.
 
 plugins {
   id 'java'
+  id 'java-library'
+  id 'maven'
+  id 'maven-publish'
+}
+
+tasks.withType(JavaCompile) {
+  options.encoding = 'UTF-8'
 }
 
 group 'io.q-software'
@@ -31,6 +38,18 @@ version '1.0.0'
 
 repositories {
   mavenCentral()
+  maven {
+    url "${qSoftwareNexusContextUrl}/${qSoftwareRepoKey}/"
+    credentials {
+      username "${qSoftwareUser}"
+      password "${qSoftwarePassword}"
+    }
+    metadataSources {
+      mavenPom()
+      gradleMetadata()
+      artifact()
+    }
+  }
 }
 
 dependencies {
@@ -46,4 +65,21 @@ dependencies {
 
 test {
   useJUnitPlatform()
+}
+
+publishing {
+  repositories {
+    maven {
+      url "${qSoftwareNexusContextUrl}/${qSoftwareRepoKey}/"
+      credentials {
+        username "${qSoftwareUser}"
+        password "${qSoftwarePassword}"
+      }
+    }
+  }
+  publications {
+    gpr(MavenPublication) {
+      from(components.java)
+    }
+  }
 }

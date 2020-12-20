@@ -13,6 +13,8 @@ public final class CredentialsBuilderCloneTest {
       .withDatabase("database")
       .withUsername("root")
       .withPassword("")
+      .withUrlDatabase("mysql")
+      .withUrlOptions(CredentialsBuilder.DEFAULT_OPTIONS + "&serverTimezone=UTC")
       .createCredentials();
 
   @Test

@@ -24,13 +24,33 @@ SOFTWARE.
 
 plugins {
   id 'java'
+  id 'java-library'
+  id 'maven'
+  id 'maven-publish'
 }
 
+tasks.withType(JavaCompile) {
+  options.encoding = 'UTF-8'
+}
+
+
 group 'io.q-software'
-version '0.1.0'
+version '1.0.0'
 
 repositories {
   mavenCentral()
+  maven {
+    url "${qSoftwareNexusContextUrl}/${qSoftwareRepoKey}/"
+    credentials {
+      username "${qSoftwareUser}"
+      password "${qSoftwarePassword}"
+    }
+    metadataSources {
+      mavenPom()
+      gradleMetadata()
+      artifact()
+    }
+  }
 }
 
 dependencies {
@@ -46,4 +66,21 @@ dependencies {
 
 test {
   useJUnitPlatform()
+}
+
+publishing {
+  repositories {
+    maven {
+      url "${qSoftwareNexusContextUrl}/${qSoftwareRepoKey}/"
+      credentials {
+        username "${qSoftwareUser}"
+        password "${qSoftwarePassword}"
+      }
+    }
+  }
+  publications {
+    gpr(MavenPublication) {
+      from(components.java)
+    }
+  }
 }

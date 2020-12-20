@@ -34,18 +34,25 @@ public final class CredentialsBuilder implements Credentials {
   private final String database;
   private final String username;
   private final String password;
+  private final String urlDatabase;
+  private final String urlOptions;
 
   private CredentialsBuilder(
     String host,
     int port,
     String database,
     String username,
-    String password) {
+    String password,
+    String urlDatabase,
+    String urlOptions
+  ) {
     this.host = host;
     this.port = port;
     this.database = database;
     this.username = username;
     this.password = password;
+    this.urlDatabase = urlDatabase;
+    this.urlOptions = urlOptions;
   }
 
   @Override
@@ -73,19 +80,29 @@ public final class CredentialsBuilder implements Credentials {
     return password;
   }
 
+  @Override
+  public String urlOptions() {
+    return urlOptions;
+  }
+
+  @Override
+  public String urlDatabase() {
+    return urlDatabase;
+  }
+
   private static final String JDBC_CONNECTION_URL_FORMAT
     = "jdbc:%s://%s:%s/%s%s";
   public static final String DEFAULT_OPTIONS
     = "?connectTimeout=0&autoReconnect=true";
 
   @Override
-  public String createJdbcConnectionUrl(String databaseType, String options) {
+  public String createJdbcConnectionUrl() {
     return String.format(JDBC_CONNECTION_URL_FORMAT,
-      databaseType,
+      urlDatabase,
       host,
       port,
       database,
-      options);
+      urlOptions);
   }
 
   private static final String TO_STRING_FORMAT = "CredentialsBuilder{" +
@@ -93,7 +110,9 @@ public final class CredentialsBuilder implements Credentials {
     "port=%s, " +
     "database='%s', " +
     "username='%s', " +
-    "password='%s'}";
+    "password='%s', " +
+    "urlDatabase='%s', " +
+    "urlOptions='%s'}";
 
   @Override
   public String toString() {
@@ -102,12 +121,20 @@ public final class CredentialsBuilder implements Credentials {
       port,
       database,
       username,
-      password);
+      password,
+      urlDatabase,
+      urlOptions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(host, port, database, username, password);
+    return Objects.hash(host,
+      port,
+      database,
+      username,
+      password,
+      urlDatabase,
+      urlOptions);
   }
 
   @Override
@@ -123,11 +150,20 @@ public final class CredentialsBuilder implements Credentials {
       && credentials.port == port
       && credentials.database.equals(database)
       && credentials.username.equals(username)
-      && credentials.password.equals(password);
+      && credentials.password.equals(password)
+      && credentials.urlDatabase.equals(urlDatabase)
+      && credentials.urlOptions.equals(urlOptions);
   }
 
   public CredentialsBuilder clone() {
-    return new CredentialsBuilder(host, port, database, username, password);
+    return new CredentialsBuilder(
+      host,
+      port,
+      database,
+      username,
+      password,
+      urlDatabase,
+      urlOptions);
   }
 
   public static Builder newBuilder() {
@@ -139,7 +175,9 @@ public final class CredentialsBuilder implements Credentials {
       credentials.port(),
       credentials.database(),
       credentials.username(),
-      credentials.password());
+      credentials.password(),
+      credentials.urlDatabase(),
+      credentials.urlOptions());
   }
 
   public static final class Builder {
@@ -148,6 +186,8 @@ public final class CredentialsBuilder implements Credentials {
     private String database;
     private String username;
     private String password;
+    private String urlDatabase;
+    private String urlOptions;
 
     private Builder() {}
 
@@ -176,12 +216,31 @@ public final class CredentialsBuilder implements Credentials {
       return this;
     }
 
+    public Builder withUrlDatabase(String urlDatabase) {
+      this.urlDatabase = urlDatabase;
+      return this;
+    }
+
+    public Builder withUrlOptions(String urlOptions) {
+      this.urlOptions = urlOptions;
+      return this;
+    }
+
     public CredentialsBuilder createCredentials() {
       Preconditions.checkNotNull(host);
       Preconditions.checkNotNull(database);
       Preconditions.checkNotNull(username);
       Preconditions.checkNotNull(password);
-      return new CredentialsBuilder(host, port, database, username, password);
+      Preconditions.checkNotNull(urlDatabase);
+      Preconditions.checkNotNull(urlOptions);
+      return new CredentialsBuilder(
+        host,
+        port,
+        database,
+        username,
+        password,
+        urlDatabase,
+        urlOptions);
     }
   }
 }
