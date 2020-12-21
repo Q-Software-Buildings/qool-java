@@ -44,7 +44,6 @@ public final class LoggerTest {
   @Test
   @BeforeAll
   public static void testLoggerCreation() {
-    Logger.initialize();
     Logger.enableDebugMode();
     Logger.updateColorCodes(Logger.ColorCodes.ALL);
     Logger.setDateFormat("dd.MM.yyyy hh:mm:ss");

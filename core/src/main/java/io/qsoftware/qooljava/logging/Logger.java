@@ -26,9 +26,7 @@ package io.qsoftware.qooljava.logging;
 
 import io.qsoftware.qooljava.Preconditions;
 import io.qsoftware.qooljava.collection.Lists;
-import io.qsoftware.qooljava.io.AsyncPrintStream;
 
-import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -47,7 +45,6 @@ public final class Logger {
 
   private static final Collection<LogAppender> appenders;
   private static SimpleDateFormat dateFormat;
-  private static PrintStream printStream;
   private static DebugMode debugMode = DebugMode.DEACTIVATE;
   private static ColorCodes colorCodes = ColorCodes.ERROR;
 
@@ -56,11 +53,6 @@ public final class Logger {
   }
 
   private Logger() {}
-
-  public static void initialize() {
-    printStream = AsyncPrintStream.createByOutputStream(System.out);
-    System.setOut(printStream);
-  }
 
   public static void enableDebugMode() {
     debugMode = DebugMode.ACTIVATE;
@@ -128,23 +120,13 @@ public final class Logger {
     String message,
     Object... options
   ) {
-    checkStreamState(message, options);
-
     message = String.format(message, options);
     message = appendLogLevel(message, level);
     message = tryAppendDate(message);
     var finalMessage = appendColorCode(message, level);
 
-    printStream.println(finalMessage);
+    System.out.println(finalMessage);
     appenders.forEach(appender -> appender.append(finalMessage));
-  }
-
-  private static void checkStreamState(String message, Object... options) {
-    if (printStream == null) {
-      System.err.printf("Logger wasn't correct initialized. Message: %s",
-        String.format(message, options));
-      throw new IllegalStateException();
-    }
   }
 
   // Message-Format: dd.MM.yyyy HH:mm:ss [LEVEL]: %message%
