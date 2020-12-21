@@ -33,20 +33,20 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 public final class ClassScanner {
-  private final ClassInfoList classList;
+  private final ClassInfoList result;
 
-  private ClassScanner(ClassInfoList classList) {
-    this.classList = classList;
+  private ClassScanner(ClassInfoList result) {
+    this.result = result;
   }
 
   public Stream<Class<?>> findNonAnnotated(Annotation annotation) {
-    return classList
+    return result
       .filter(classInfo -> !isAnnotated(classInfo, annotation))
       .loadClasses().stream();
   }
 
   public Stream<Class<?>> findAnnotated(Annotation annotation) {
-    return classList
+    return result
       .filter(type -> isAnnotated(type, annotation))
       .loadClasses().stream();
   }
@@ -59,7 +59,7 @@ public final class ClassScanner {
   public Stream<Class<?>> findNonAnnotated(
     Class<? extends Annotation> annotationType
   ) {
-    return classList
+    return result
       .filter(type -> !isAnnotated(type, annotationType))
       .loadClasses().stream();
   }
@@ -67,7 +67,7 @@ public final class ClassScanner {
   public Stream<Class<?>> findAnnotated(
     Class<? extends Annotation> annotationType
   ) {
-    return classList
+    return result
       .filter(type -> isAnnotated(type, annotationType))
       .loadClasses().stream();
   }
@@ -81,7 +81,7 @@ public final class ClassScanner {
   }
 
   public <E> Stream<Class<E>> findSubTypes(Class<E> superType) {
-    return classList
+    return result
       .filter(classInfo -> isSubType(classInfo, superType))
       .filter(this::isNoInterface)
       .stream()
@@ -102,7 +102,7 @@ public final class ClassScanner {
   }
 
   public Stream<Class<?>> classes() {
-    return classList.loadClasses().stream();
+    return result.loadClasses().stream();
   }
 
   private static final ClassGraph DEFAULT_CLASS_GRAPH = new ClassGraph()
@@ -111,30 +111,30 @@ public final class ClassScanner {
     .enableExternalClasses();
 
   public static ClassScanner create() {
-    return new ClassScanner(DEFAULT_CLASS_GRAPH.scan().getAllClasses());
+    return new ClassScanner(DEFAULT_CLASS_GRAPH.scan().getAllStandardClasses());
   }
 
   public static ClassScanner createInPackage(String packageName) {
     return new ClassScanner(DEFAULT_CLASS_GRAPH
-      .whitelistPackages(packageName)
+      .whitelistPackagesNonRecursive(packageName)
       .scan()
-      .getAllClasses()
-      .filter(classInfo -> classInfo.getPackageName().equals(packageName)));
+      .getAllStandardClasses());
   }
 
   public static ClassScanner createInPackageRecursive(String packageName) {
     return new ClassScanner(DEFAULT_CLASS_GRAPH
     .whitelistPackages(packageName)
     .scan()
-    .getAllClasses());
+    .getAllStandardClasses());
   }
 
   public static ClassScanner of(Collection<Class<?>> classes) {
     Preconditions.checkNotNull(classes);
     return new ClassScanner(DEFAULT_CLASS_GRAPH
       .whitelistClasses(classes.stream()
-        .map(Class::getName).toArray(String[]::new))
+        .map(Class::getName)
+        .toArray(String[]::new))
       .scan()
-      .getAllClasses());
+      .getAllStandardClasses());
   }
 }
