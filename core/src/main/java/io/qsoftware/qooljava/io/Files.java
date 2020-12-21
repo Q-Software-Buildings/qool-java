@@ -85,7 +85,7 @@ public final class Files {
     throws IOException {
     boolean success = true;
     File directory = file.getParentFile();
-    if (directory.exists()) {
+    if (!directory.exists()) {
       success = directory.mkdirs();
     }
     return file.createNewFile() && success;
