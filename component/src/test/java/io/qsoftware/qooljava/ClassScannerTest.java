@@ -16,6 +16,8 @@ public final class ClassScannerTest {
   @TestAnnotation
   public final static class TestAnnotatedClass {}
 
+  public final static class NotAnnotatedClass {}
+
   @Test
   public void testFindAnnotatedClasses() {
     ClassScanner scanner = ClassScanner

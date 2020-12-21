@@ -41,26 +41,15 @@ public final class ClassScanner {
 
   public Stream<Class<?>> findNonAnnotated(Annotation annotation) {
     return result
-      .filter(classInfo -> !isAnnotated(classInfo, annotation))
+      .filter(classInfo -> !classInfo
+        .hasAnnotation(annotation.getClass().getName()))
       .loadClasses().stream();
   }
 
   public Stream<Class<?>> findAnnotated(Annotation annotation) {
     return result
-      .filter(type -> isAnnotated(type, annotation))
-      .loadClasses().stream();
-  }
-
-  private boolean isAnnotated(ClassInfo classInfo, Annotation annotation) {
-    var annotationName = annotation.getClass().getName();
-    return classInfo.hasAnnotation(annotationName);
-  }
-
-  public Stream<Class<?>> findNonAnnotated(
-    Class<? extends Annotation> annotationType
-  ) {
-    return result
-      .filter(type -> !isAnnotated(type, annotationType))
+      .filter(classInfo -> classInfo
+        .hasAnnotation(annotation.getClass().getName()))
       .loadClasses().stream();
   }
 
@@ -68,32 +57,23 @@ public final class ClassScanner {
     Class<? extends Annotation> annotationType
   ) {
     return result
-      .filter(type -> isAnnotated(type, annotationType))
+      .filter(classInfo -> classInfo.hasAnnotation(annotationType.getName()))
       .loadClasses().stream();
   }
 
-  private boolean isAnnotated(
-    ClassInfo classInfo,
+  public Stream<Class<?>> findNonAnnotated(
     Class<? extends Annotation> annotationType
   ) {
-    var annotationName = annotationType.getName();
-    return classInfo.hasAnnotation(annotationName);
+    return result
+      .filter(classInfo -> !classInfo.hasAnnotation(annotationType.getName()))
+      .loadClasses().stream();
   }
 
   public <E> Stream<Class<E>> findSubTypes(Class<E> superType) {
     return result
-      .filter(classInfo -> isSubType(classInfo, superType))
-      .filter(this::isNoInterface)
+      .filter(classInfo -> classInfo.extendsSuperclass(superType.getName()))
       .stream()
       .map(this::unsafeTypeCast);
-  }
-
-  private boolean isSubType(ClassInfo classInfo, Class<?> target) {
-    return target.isAssignableFrom(classInfo.loadClass());
-  }
-
-  private boolean isNoInterface(ClassInfo classInfo) {
-    return !classInfo.isInterface();
   }
 
   @SuppressWarnings("unchecked")
