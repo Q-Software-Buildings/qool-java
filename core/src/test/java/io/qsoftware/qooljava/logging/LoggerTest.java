@@ -28,6 +28,19 @@ import org.junit.jupiter.api.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public final class LoggerTest {
+  public static final class TestLogAppender implements LogAppender {
+    public static TestLogAppender create() {
+      return new TestLogAppender();
+    }
+
+    private TestLogAppender() {}
+
+    @Override
+    public void append(String message) {
+      System.out.println("APPEND: " + message);
+    }
+  }
+
   @Test
   @BeforeAll
   public static void testLoggerCreation() {
@@ -35,6 +48,7 @@ public final class LoggerTest {
     Logger.enableDebugMode();
     Logger.updateColorCodes(Logger.ColorCodes.ALL);
     Logger.setDateFormat("dd.MM.yyyy hh:mm:ss");
+    Logger.addLogAppender(TestLogAppender.create());
   }
 
   private static final String TEST_MESSAGE = "Hey, my name is: %s";

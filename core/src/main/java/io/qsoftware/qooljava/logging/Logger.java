@@ -25,12 +25,12 @@ SOFTWARE.
 package io.qsoftware.qooljava.logging;
 
 import io.qsoftware.qooljava.Preconditions;
+import io.qsoftware.qooljava.collection.Lists;
 import io.qsoftware.qooljava.io.AsyncPrintStream;
 
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 
 public final class Logger {
@@ -52,7 +52,7 @@ public final class Logger {
   private static ColorCodes colorCodes = ColorCodes.ERROR;
 
   static {
-    appenders = Collections.emptyList();
+    appenders = Lists.newArrayList();
   }
 
   private Logger() {}
