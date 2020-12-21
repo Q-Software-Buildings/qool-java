@@ -1,5 +1,6 @@
 package io.qsoftware.qooljava;
 
+import io.github.classgraph.ClassGraph;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.ElementType;
@@ -22,5 +23,23 @@ public final class ClassScannerTest {
 
     scanner.findAnnotated(TestAnnotation.class)
       .forEach(foundClass -> System.out.println(foundClass.getSimpleName()));
+  }
+
+  @Test
+  public void testProjectClasses() {
+    ClassScanner scanner = ClassScanner
+      .createInPackage(getClass().getPackageName());
+
+    scanner.classes()
+      .forEach(foundClass -> System.out.println(foundClass.getSimpleName()));
+    System.out.println("--");
+    new ClassGraph()
+      .whitelistPackages(getClass().getPackageName())
+      .enableClassInfo()
+      .enableAnnotationInfo()
+      .scan()
+      .getAllClasses()
+      .forEach(standardClasses ->
+        System.out.println(standardClasses.getSimpleName()));
   }
 }

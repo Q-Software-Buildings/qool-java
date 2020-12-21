@@ -107,25 +107,24 @@ public final class ClassScanner {
 
   private static final ClassGraph DEFAULT_CLASS_GRAPH = new ClassGraph()
     .enableClassInfo()
-    .enableAnnotationInfo()
-    .enableExternalClasses();
+    .enableAnnotationInfo();
 
   public static ClassScanner create() {
-    return new ClassScanner(DEFAULT_CLASS_GRAPH.scan().getAllStandardClasses());
+    return new ClassScanner(DEFAULT_CLASS_GRAPH.scan().getAllClasses());
   }
 
   public static ClassScanner createInPackage(String packageName) {
     return new ClassScanner(DEFAULT_CLASS_GRAPH
       .whitelistPackagesNonRecursive(packageName)
       .scan()
-      .getAllStandardClasses());
+      .getAllClasses());
   }
 
   public static ClassScanner createInPackageRecursive(String packageName) {
     return new ClassScanner(DEFAULT_CLASS_GRAPH
     .whitelistPackages(packageName)
     .scan()
-    .getAllStandardClasses());
+    .getAllClasses());
   }
 
   public static ClassScanner of(Collection<Class<?>> classes) {
@@ -135,6 +134,6 @@ public final class ClassScanner {
         .map(Class::getName)
         .toArray(String[]::new))
       .scan()
-      .getAllStandardClasses());
+      .getAllClasses());
   }
 }
