@@ -85,31 +85,37 @@ public final class ClassScanner {
     return result.loadClasses().stream();
   }
 
-  private static final ClassGraph DEFAULT_CLASS_GRAPH = new ClassGraph()
-    .enableClassInfo()
-    .enableAnnotationInfo();
-
   public static ClassScanner create() {
-    return new ClassScanner(DEFAULT_CLASS_GRAPH.scan().getAllClasses());
+    return new ClassScanner(new ClassGraph()
+      .enableClassInfo()
+      .enableAnnotationInfo()
+      .scan()
+      .getAllClasses());
   }
 
   public static ClassScanner createInPackage(String packageName) {
-    return new ClassScanner(DEFAULT_CLASS_GRAPH
+    return new ClassScanner(new ClassGraph()
+      .enableClassInfo()
+      .enableAnnotationInfo()
       .whitelistPackagesNonRecursive(packageName)
       .scan()
       .getAllClasses());
   }
 
   public static ClassScanner createInPackageRecursive(String packageName) {
-    return new ClassScanner(DEFAULT_CLASS_GRAPH
-    .whitelistPackages(packageName)
-    .scan()
-    .getAllClasses());
+    return new ClassScanner(new ClassGraph()
+      .enableClassInfo()
+      .enableAnnotationInfo()
+      .whitelistPackages(packageName)
+      .scan()
+      .getAllClasses());
   }
 
   public static ClassScanner of(Collection<Class<?>> classes) {
     Preconditions.checkNotNull(classes);
-    return new ClassScanner(DEFAULT_CLASS_GRAPH
+    return new ClassScanner(new ClassGraph()
+      .enableClassInfo()
+      .enableAnnotationInfo()
       .whitelistClasses(classes.stream()
         .map(Class::getName)
         .toArray(String[]::new))

@@ -4,6 +4,8 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+
 public final class ClassGraphTest {
   @Test
   public void testResolvingAllClasses() {
@@ -39,5 +41,31 @@ public final class ClassGraphTest {
       result.getClassesWithAnnotation(testAnnotationName)
         .forEach(foundClasses -> System.out.println(foundClasses.getSimpleName()));
     }
+  }
+
+  @Test
+  public void testWhitelistedClasses() {
+    String className = Component.class.getName();
+
+    new ClassGraph().enableClassInfo()
+      .whitelistClasses(className)
+      .scan()
+      .getAllClasses()
+      .forEach(foundClass -> System.out.println(foundClass.getSimpleName()));
+  }
+
+  @Test
+  public void testWhitelistedClassesOfArray() {
+    var classes = Collections
+      .singleton(ComponentScannerTest.TestAnnotatedClass.class);
+    new ClassGraph()
+      .enableClassInfo()
+      .enableAnnotationInfo()
+      .whitelistClasses(classes.stream()
+        .map(Class::getName)
+        .toArray(String[]::new))
+      .scan()
+      .getAllClasses()
+      .forEach(foundClass -> System.out.println(foundClass.getSimpleName()));
   }
 }
